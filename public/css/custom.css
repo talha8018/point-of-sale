@@ -1,0 +1,32 @@
+/* Custom table */
+.custom-table
+{
+	background-color: #fff;
+}
+.custom-table>tbody>tr>td, .custom-table>tbody>tr>th, .custom-table>tfoot>tr>td, .custom-table>tfoot>tr>th, .custom-table>thead>tr>td, .custom-table>thead>tr>th {
+    padding: 4px 8px;
+    vertical-align: middle;
+}
+
+
+/**/
+html {
+    background: #edf1f5;
+}
+.whit-box-custom
+{
+	background-color: #edf1f5;
+	padding: 10px;
+}
+textarea
+{
+	resize: none;
+}
+.footer {
+    background: #edf1f5;
+}
+.select2-container .select2-choice .select2-arrow
+{
+	background-color: #fff;
+	border: 0;
+}
