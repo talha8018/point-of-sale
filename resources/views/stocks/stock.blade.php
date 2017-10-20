@@ -23,20 +23,24 @@ Stock
                 	<thead>
                 		<tr>
                 			<th style="width: 1%;">#</th>
-                            <th style="width: 10%;">Company</th>
-                			<th style="width: 18%;">Name</th>
-                			<th>Description</th>
+                            <th style="">Company</th>
+                			<th style="">Product</th>
+                			<th style="width: 1%;">Qty</th>
+                            <th style="width: 10%;">Purchase</th>
+                            <th style="width: 10%;">Sale</th>
                 			<th style="width: 1%;">Action</th>
                 		</tr>
                 	</thead>
                 	<tbody>
-                		@foreach($products as $key => $val)
+                		@foreach($stock as $key => $val)
                 		<tr>
                             <td>{{$key+1}}</td>
-                			<td>{{App\Models\Company\Company::where('id',$val['company_id'])->first()->name}}</td>
-                			<td>{{$val['name']}}</td>
-                			<td>{{$val['description']}}</td>
-                			<td> <a href="#" class="update-model-link" data-id="{{$val['id']}}" data-cid="{{$val['company_id']}}" data-name="{{$val['name']}}" data-description="{{$val['description']}}"  data-toggle="modal" data-target=".update-model"> <i class="mdi mdi-account-edit"></i> </a> | <a href="product/delete/{{$val['id']}}"> <i class="mdi mdi-delete-forever"></i></a> </td>
+                			<td>{{$val['cname']}}</td>
+                			<td>{{$val['pname']}}</td>
+                			<td>{{$val['quantity']}}</td>
+                			<td>{{number_format($val['unit_purchase_price'],2)}}</td>
+                			<td>{{number_format($val['unit_sale_price'],2)}}</td>
+                			<td> <a href="#" class="update-model-link" data-sale="{{$val['unit_sale_price']}}" data-purchase="{{$val['unit_purchase_price']}}" data-qty="{{$val['quantity']}}" data-id="{{$val['id']}}" data-cid="{{$val['cid']}}" data-pid="{{$val['pid']}}"   data-toggle="modal" data-target=".update-model"> <i class="mdi mdi-account-edit"></i> </a> | <a href="product/delete/{{$val['id']}}"> <i class="mdi mdi-delete-forever"></i></a> </td>
                 		</tr>
                 		@endforeach
                 	</tbody>
@@ -59,13 +63,13 @@ Stock
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="mySmallModalLabel">Add Product</h4> </div>
+                <h4 class="modal-title" id="mySmallModalLabel">Add Stock</h4> </div>
             <div class="modal-body">
             	<form method="post" action="stock/add">
             		{{ csrf_field() }}
                     <label>Company</label>
                     <select name="company_id" id="company_id_add" class="form-control" required="required">
-                        <option>Select</option>
+                        <option value="">Select</option>
                         @foreach($companies as $c)
                             <option value="{{$c['id']}}">{{$c['name']}}</option>
                         @endforeach
@@ -74,7 +78,7 @@ Stock
                     
             		<label>Product</label>
             		<select name="product_id" id="product_id_add" class="form-control" required="required">
-                        <option>Select</option>
+                        <option value="">Select</option>
                     </select>
             		<br>
             		<label>Quantity</label>
@@ -100,26 +104,34 @@ Stock
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="mySmallModalLabel">Update Product</h4> </div>
+                <h4 class="modal-title" id="mySmallModalLabel">Update Stock</h4> </div>
             <div class="modal-body">
-            	<form method="post" action="product/update">
-            		{{ csrf_field() }}
+            	<form method="post" action="stock/update">
+                    {{ csrf_field() }}
+                    <input type="hidden" id="id" name="id">
                     <label>Company</label>
-                    <select name="company_id" required="required" id="cid" class="company_id form-control">
-                        <option>Select</option>
+                    <select name="company_id" id="company_id_update" class="form-control" required="required">
+                        <option value="">Select</option>
                         @foreach($companies as $c)
                             <option value="{{$c['id']}}">{{$c['name']}}</option>
                         @endforeach
                     </select>
                     <br>
                     
-            		<input type="hidden" name="id" id="id">
-            		<label>Name</label>
-            		<input type="text" required="required" name="name" id="name" class="form-control" placeholder="Name">
-            		<br>
-            		<label>Description</label>
-            		<textarea class="form-control" required="required" id="description" name="description" rows="4"></textarea>
-            		<br>
+                    <label>Product</label>
+                    <select name="product_id" id="product_id_update" class="form-control" required="required">
+                        <option value="">Select</option>
+                    </select>
+                    <br>
+                    <label>Quantity</label>
+                    <input type="number" required="required" step="0.01" name="quantity" id="quantity_update" class="form-control" placeholder="Quantity">
+                    <br>
+                    <label>Unit Purchase Price</label>
+                    <input type="number" required="required" step="0.01" name="unit_purchase_price" id="unit_purchase_price_update" class="form-control purchase" placeholder="Unit Purchase Price">
+                    <br>
+                    <label>Unit Sale Price</label>
+                    <input type="number" required="required" step="0.01" name="unit_sale_price" id="unit_sale_price_update" class="sale form-control" placeholder="Unit Sale Price">
+                    <br>
             		<input type="submit" name="" class="btn btn-block btn-outline btn-primary" value="Update">
             	</form>
             </div>
@@ -137,14 +149,29 @@ Stock
 	$(".update-model-link").click(function(){
         var id = $(this).data('id');
 		var cid = $(this).data('cid');
-		var name = $(this).data('name');
-		var description = $(this).data('description');
+		var pid = $(this).data('pid');
+		var qty = $(this).data('qty');
+		var sale = $(this).data('sale');
+		var purchase = $(this).data('purchase');
+
+		$.ajax({
+            url     : "product/ajax/get-products",
+            type    : "post",
+            data    : {"company_id":cid,"_token":"{{ csrf_token() }}"},
+            success : function(data)
+            {
+                $("#product_id_update").html(data);
+            }
+        })
 
 		$("#id").val(id);
-        $("#name").val(name);
-		
-        $("#cid").val(cid);
-		$("#description").val(description);
+		$("#company_id_update").val(cid);
+		$("#product_id_update").val(pid);
+		$("#quantity_update").val(qty);
+		$("#unit_purchase_price_update").val(purchase);
+		$("#unit_sale_price_update").val(sale);
+		$(".sale").attr("min",purchase);
+       
 	});
 
 

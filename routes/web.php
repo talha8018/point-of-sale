@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
 
 	// Stock Routes Start
 	Route::get('stock','Stock\StockController@show');
+	Route::post('stock/add','Stock\StockController@insert');
+	Route::post('stock/update','Stock\StockController@update');
 	// Stock Routes End
 });
 
