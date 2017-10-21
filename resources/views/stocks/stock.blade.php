@@ -12,11 +12,14 @@ Stock
 				@if ( session()->has('message') )
 	                <div class="alert alert-success alert-dismissable"><b> Success! </b> {{ session()->get('message') }}</div>
 	            @endif
+                @if ( session()->has('error') )
+	                <div class="alert alert-danger alert-dismissable"><b> Error! </b> {{ session()->get('error') }}</div>
+	            @endif
                 <h3 class="box-title m-b-0">Stock List</h3>
                 <p class="text-muted ">Here you can add and edit the stock </p>
                 
                 <div class="col-md-1 p-l-0">
-                	<button  class="btn btn-outline btn-default btn-xs" data-toggle="modal" data-target=".add-model">Add Stock</button>
+                	<button  class="btn btn-outline btn-default btn-xs" data-toggle="modal" data-target=".add-model">Add New Stock</button>
                 </div>
                 @if(count($products)>0)
                 <table class="table table-bordered  custom-table">
@@ -40,7 +43,8 @@ Stock
                 			<td>{{$val['quantity']}}</td>
                 			<td>{{number_format($val['unit_purchase_price'],2)}}</td>
                 			<td>{{number_format($val['unit_sale_price'],2)}}</td>
-                			<td> <a href="#" class="update-model-link" data-sale="{{$val['unit_sale_price']}}" data-purchase="{{$val['unit_purchase_price']}}" data-qty="{{$val['quantity']}}" data-id="{{$val['id']}}" data-cid="{{$val['cid']}}" data-pid="{{$val['pid']}}"   data-toggle="modal" data-target=".update-model"> <i class="mdi mdi-account-edit"></i> </a> | <a href="product/delete/{{$val['id']}}"> <i class="mdi mdi-delete-forever"></i></a> </td>
+                			<td> <a href="#" class="update-model-link" data-sale="{{$val['unit_sale_price']}}" data-purchase="{{$val['unit_purchase_price']}}" data-qty="{{$val['quantity']}}" data-id="{{$val['id']}}" data-cid="{{$val['cid']}}" data-pid="{{$val['pid']}}"   data-toggle="modal" data-target=".update-model"> <i class="mdi mdi-account-edit"></i> </a> |
+                            <a href="#" data-qty="{{$val['quantity']}}"  class="qty_update" data-id="{{$val['id']}}" data-cname="{{$val['cname']}}" data-pname="{{$val['pname']}}" data-toggle="modal" data-target=".add-stock-model"> <i class="mdi mdi-plus"></i></a> </td>
                 		</tr>
                 		@endforeach
                 	</tbody>
@@ -97,6 +101,47 @@ Stock
     </div>
 </div>
 
+<div class="modal fade add-stock-model" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="mySmallModalLabel">Update Stock</h4> </div>
+            <div class="modal-body">
+            	<form method="post" action="stock/quantity/update">
+                    {{ csrf_field() }}
+                    <input type="hidden" id="id" name="id">
+                    <label>Company</label>
+                    <input type="text" id="scname" class="form-control" readonly>
+                    <br>
+                    
+                    <label>Product</label>
+                    <input type="text" id="spname" class="form-control" readonly>
+                    <br>
+                    <label>Quantity</label>
+                    <div class="col-xs-12 p-0">
+                        <div class="col-xs-4 p-l-0">
+                            <input type="number" name="" readonly id="qold" class="form-control">
+                            <span class="sign-plus">+</span>
+                        </div>
+                        
+                        <div class="col-xs-4 p-0">
+                            <input type="number" name="change_quantity" id="qchange" class="form-control">
+                            <span class="sign-equal">=</span>
+                        </div>
+                        
+                        <div class="col-xs-4 p-r-0">
+                            <input type="number" name="quantity" readonly id="qnew" class="form-control">
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <br>
+            		<input type="submit" name="" class="btn btn-block btn-outline btn-primary" value="Update">
+            	</form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--update model-->
 <div class="modal fade update-model" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
@@ -141,10 +186,40 @@ Stock
 @endsection
 
 @section('css')
+<style>
+.sign
+{
+    position: absolute;
+    margin: -28px 84px;
+}
+</style>
 @endsection
 
 @section('js')
 <script type="text/javascript">
+    
+
+    $(".qty_update").click(function(){
+        var id = $(this).data('id');
+        var cname = $(this).data('cname');
+        var pname = $(this).data('pname');
+        var qty = $(this).data('qty');
+	
+		$("#id").val(id);
+		$("#scname").val(cname);
+		$("#spname").val(pname);
+		$("#qold").val(qty);
+	});
+
+    $("#qchange").keyup(function(){
+        var old = $("#qold").val();
+        var ne = $(this).val();
+        if(ne=="")
+        {
+            ne=0;
+        }
+        $("#qnew").val(parseInt(old) + parseInt(ne));
+    })
 
 	$(".update-model-link").click(function(){
         var id = $(this).data('id');

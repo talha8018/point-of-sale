@@ -64,8 +64,8 @@ Products
             	<form method="post" action="product/add">
             		{{ csrf_field() }}
                     <label>Companies</label>
-                    <select name="company_id" class="company_id form-control" required="required">
-                        <option>Select</option>
+                    <select name="company_id" required class="company_id form-control" required="required">
+                        <option value="">Select</option>
                         @foreach($companies as $c)
                             <option value="{{$c['id']}}">{{$c['name']}}</option>
                         @endforeach

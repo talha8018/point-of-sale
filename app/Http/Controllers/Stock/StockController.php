@@ -42,6 +42,23 @@ class StockController extends Controller
     	return redirect('/stock')->with('message','Stock has been added.');
 	}
 
+	public function quantityUpdate()
+	{
+		$input = request();
+		if($input['change_quantity']>0)
+		{
+			Stock::where('id','=',$input['id'])->update([
+				'quantity' 		=> $input['quantity']
+			]);
+			return redirect('/stock')->with('message','Quantity has been updated.');
+		}
+		else
+		{
+			return redirect('/stock')->with('error','Quantity not updated try again.');
+		}
+
+	}
+
 	public function update()
     {
 		$input = request();
