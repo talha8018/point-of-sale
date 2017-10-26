@@ -32,24 +32,24 @@ class ProductController extends Controller
     public function update()
     {
     	$input = request();
-		$old_data = Company::where('id','=',$input['id'])->get()->toJson();
+		$old_data = Product::where('id','=',$input['id'])->get()->toJson();
 		$response = Product::where('id','=',$input['id'])->update([
     		'name' => $input['name'],
     		'company_id' => $input['company_id'],
     		'description' => $input['description'],
 		]);
-		$new_data = Company::where('id','=',$input['id'])->get()->toJson();
+		$new_data = Product::where('id','=',$input['id'])->get()->toJson();
 		Trail::makeTrail('Product Page',$old_data,$new_data,'3');
     	return redirect('/products')->with('message','Product has been updated.');    	
     }
 
     public function delete($id)
     {
-		$old_data = Company::where('id','=',$id)->get()->toJson();
+		$old_data = Product::where('id','=',$id)->get()->toJson();
     	Product::where("id",'=',$id)->update([
     			'status' => 0,
 		]);
-		$new_data = Company::where('id','=',$id)->get()->toJson();
+		$new_data = Product::where('id','=',$id)->get()->toJson();
 		Trail::makeTrail('Product Page',$old_data,$new_data,'4');
     	return redirect('/products')->with('message','Product has been deleted.'); 
     }

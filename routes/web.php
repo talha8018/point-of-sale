@@ -35,8 +35,14 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('stock/add','Stock\StockController@insert');
 	Route::post('stock/update','Stock\StockController@update');
 	Route::post('stock/quantity/update','Stock\StockController@quantityUpdate');
-	
 	// Stock Routes End
+
+	// Partner Routes Start
+	Route::get('partners','Partner\PartnerController@show');	
+	Route::post('partner/add','Partner\PartnerController@insert');	
+	Route::post('partner/update','Partner\PartnerController@update');	
+	Route::get('partner/delete/{id}','Partner\PartnerController@delete');	
+	// Parnter Routes End
 });
 
 

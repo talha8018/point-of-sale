@@ -78,6 +78,7 @@
                         </ul>
                     </li>  
                     <li> <a href="{{url('stock')}}" class="waves-effect"> Stock Section </a>
+                    <li> <a href="{{url('partners')}}" class="waves-effect"> Partner Section </a>
                         
                     </li> 
 
