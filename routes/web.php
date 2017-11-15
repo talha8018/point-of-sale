@@ -44,12 +44,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('partner/delete/{id}','Partner\PartnerController@delete');	
 	// Parnter Routes End
 
-	// Movements Routes Start
-	Route::get('movements','Partner\PartnerController@show');	
-	Route::post('partner/add','Partner\PartnerController@insert');	
-	Route::post('partner/update','Partner\PartnerController@update');	
-	Route::get('partner/delete/{id}','Partner\PartnerController@delete');	
-	// Movements Routes End
+	
 });
 
 
