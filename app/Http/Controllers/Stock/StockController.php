@@ -23,7 +23,7 @@ class StockController extends Controller
 						->orderBy('stocks.id','desc')->get()->toArray();
     	return view('stocks/stock',compact('companies','products','stock'));
 	}
-	
+	/* 
 	public function insert()
     {
 		$input = request();
@@ -86,6 +86,6 @@ class StockController extends Controller
 		$new_data = Stock::where('id','=',$input['id'])->get()->toJson();
 		Trail::makeTrail('Stock Details Page',$old_data,$new_data,'3');
     	return redirect('/stock')->with('message','Stock has been updated.');    	
-    }
+    } */
 	
 }
