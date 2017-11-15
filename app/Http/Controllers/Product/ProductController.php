@@ -12,7 +12,7 @@ class ProductController extends Controller
 {
     public function show()
     {
-		Trail::makeTrail('Product Page','','','2');
+		//Trail::makeTrail('Product Page','','','2');
     	$companies = Company::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
     	$products = Product::where('status','=','1')->orderBy('id','desc')->get()->toArray();
     	return view('products/product',compact('companies','products'));

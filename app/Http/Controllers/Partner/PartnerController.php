@@ -11,7 +11,7 @@ class PartnerController extends Controller
 {
     public function show()
     {
-		Trail::makeTrail('Partners Page','','','2');
+		//Trail::makeTrail('Partners Page','','','2');
     	$partners = Partner::where('status','=','1')->orderBy('id','desc')->get()->toArray();
     	return view('partners/partner',compact('partners'));
     }

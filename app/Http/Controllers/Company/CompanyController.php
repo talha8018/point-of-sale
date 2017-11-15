@@ -11,7 +11,7 @@ class CompanyController extends Controller
 {
     public function show()
     {
-		Trail::makeTrail('Company Page','','','2');
+		//Trail::makeTrail('Company Page','','','2');
     	$companies = Company::where('status','=','1')->orderBy('id','desc')->get()->toArray();
     	return view('companies/company',compact('companies'));
     }

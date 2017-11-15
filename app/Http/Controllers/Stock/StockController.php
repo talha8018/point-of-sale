@@ -14,7 +14,7 @@ class StockController extends Controller
 {
     public function show()
     {
-		Trail::makeTrail('Stock Page','','','2');
+		//Trail::makeTrail('Stock Page','','','2');
     	$companies = Company::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
     	$products = Product::where('status','=','1')->orderBy('id','desc')->get()->toArray();
 		$stock = Stock::join('products','products.id','=','stocks.product_id')
@@ -74,6 +74,7 @@ class StockController extends Controller
 		$input = request();
 		$barcode = Product::where('id',$input['product_id'])->first(['barcode'])->barcode;
 		$old_data = Stock::where('id','=',$input['id'])->get()->toJson();
+		
     	Stock::where('id','=',$input['id'])->update([
     		'product_id'	=> $input['product_id'],
 			'barcode'		=> $barcode,

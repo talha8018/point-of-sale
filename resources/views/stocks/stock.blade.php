@@ -153,7 +153,7 @@ Stock
             <div class="modal-body">
             	<form method="post" action="stock/update">
                     {{ csrf_field() }}
-                    <input type="hidden" id="id" name="id">
+                    <input type="hidden" id="idu" name="id">
                     <label>Company</label>
                     <select name="company_id" id="company_id_update" class="form-control" required="required">
                         <option value="">Select</option>
@@ -186,13 +186,7 @@ Stock
 @endsection
 
 @section('css')
-<style>
-.sign
-{
-    position: absolute;
-    margin: -28px 84px;
-}
-</style>
+
 @endsection
 
 @section('js')
@@ -239,7 +233,7 @@ Stock
             }
         })
 
-		$("#id").val(id);
+		$("#idu").val(id);
 		$("#company_id_update").val(cid);
 		$("#product_id_update").val(pid);
 		$("#quantity_update").val(qty);

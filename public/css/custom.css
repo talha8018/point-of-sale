@@ -30,3 +30,11 @@ textarea
 	background-color: #fff;
 	border: 0;
 }
+span.sign-plus {
+    position: absolute;
+    margin: -26px 0px 0px 77px;
+}
+span.sign-equal {
+    position: absolute;
+    margin: -26px 0px 0px 92px;
+}
