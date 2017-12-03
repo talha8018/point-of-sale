@@ -13,23 +13,17 @@
                 <ul class="nav navbar-top-links navbar-right pull-right">
                     
                     <li class="dropdown">
-                        <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="javascript:void(0)"> <img src="images/users/varun.jpg" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">{{Auth::user()->name}}</b><span class="caret"></span> </a>
+                        <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="javascript:void(0)"><b class="hidden-xs">{{Auth::user()->name}}</b><span class="caret"></span> </a>
                         <ul class="dropdown-menu dropdown-user">
                             <li>
                                 <div class="dw-user-box">
-                                    <div class="u-img"><img src="images/users/varun.jpg" alt="user" /></div>
+                                  
                                     <div class="u-text">
-                                        <h4>Steave Jobs</h4>
-                                        <p class="text-muted">varun@gmail.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+                                        <h4>{{Auth::user()->name}}</h4>
+                                        <p class="text-muted">{{Auth::user()->email}}</p></div>
                                 </div>
                             </li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0)"><i class="ti-user"></i> My Profile</a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-wallet"></i> My Balance</a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-email"></i> Inbox</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0)"><i class="ti-settings"></i> Account Setting</a></li>
-                            <li role="separator" class="divider"></li>
+                            
                             <li><a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Logout</a></li>
@@ -56,10 +50,7 @@
                         <a href="javascript:void(0)" class="waves-effect"><img src="images/users/varun.jpg" alt="user-img" class="img-circle"> <span class="hide-menu">{{Auth::user()->name}}<span class="fa arrow"></span></span>
                         </a>
                         <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
-                            <li><a href="javascript:void(0)"><i class="ti-user"></i> <span class="hide-menu">My Profile</span></a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-wallet"></i> <span class="hide-menu">My Balance</span></a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-email"></i> <span class="hide-menu">Inbox</span></a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-settings"></i> <span class="hide-menu">Account Setting</span></a></li>
+                            
                             <li><a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
@@ -70,18 +61,26 @@
                                         </form>
 
 
-
+                    <li> <a href="{{url('partners')}}" class="waves-effect"> Partner Section </a></li>
                     <li> <a href="javascript:void(0)" class="waves-effect"> C&P Section </a>
                         <ul class="nav nav-second-level">
                             <li> <a href="{{url('companies')}}"><i class=" fa-fw">C</i><span class="hide-menu">Companies</span></a> </li>
                             <li> <a href="{{url('products')}}"><i class=" fa-fw">P</i><span class="hide-menu">Products</span></a> </li>
                         </ul>
                     </li>  
-                    <li> <a href="{{url('stock')}}" class="waves-effect"> Stock Section </a>
-                    <li> <a href="{{url('partners')}}" class="waves-effect"> Partner Section </a>
-                    <li> <a href="{{url('movements')}}" class="waves-effect"> Movement Section </a>
-                        
-                    </li> 
+
+                    
+                   
+
+                    <li> <a href="javascript:void(0)" class="waves-effect"> Purchases Section </a>
+                        <ul class="nav nav-second-level">
+                            <li> <a href="{{url('purchases')}}"><i class=" fa-fw">P</i><span class="hide-menu">Purchases</span></a> </li>
+                            <li> <a href="{{url('purchases/history')}}"><i class=" fa-fw">H</i><span class="hide-menu">History</span></a> </li>
+                        </ul>
+                    </li>    
+                    <li> <a href="{{url('stock')}}" class="waves-effect"> Stock Section </a></li>
+                    <li> <a href="{{url('movements')}}" class="waves-effect"> Movement Section </a></li>
+                    
 
                 </ul>
             </div>

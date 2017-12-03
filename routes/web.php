@@ -32,8 +32,10 @@ Route::middleware(['auth'])->group(function () {
 
 	// Stock Routes Start
 	Route::get('stock','Stock\StockController@show');
+	Route::get('stock/search','Stock\StockController@stockSearch');
 	Route::post('stock/add','Stock\StockController@insert');
 	Route::post('stock/update','Stock\StockController@update');
+	Route::get('stock/get-product-by-id/{id}','Stock\StockController@getStockByProductID');
 	Route::post('stock/quantity/update','Stock\StockController@quantityUpdate');
 	// Stock Routes End
 
@@ -44,7 +46,29 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('partner/delete/{id}','Partner\PartnerController@delete');	
 	// Parnter Routes End
 
+	// Purchase Routes Start
+	Route::get('purchases','Purchase\PurchaseController@show');		
+	Route::post('purchases/temp','Purchase\PurchaseController@insertTemp');		
+	Route::post('purchases/make','Purchase\PurchaseController@makePurchase');				
+	Route::get('purchases/temp/clear-all','Purchase\PurchaseController@deleteAll');		
+	Route::get('purchases/temp/delete/{id}','Purchase\PurchaseController@deleteTemp');		
+	Route::get('purchases/history','Purchase\PurchaseController@history');		
+	Route::get('purchases/history/search','Purchase\PurchaseController@historySearch');		
+	Route::get('purchases/bill/{bill}','Purchase\PurchaseController@searchBillByID');		
+	// Purchase Routes End
+
+
+	// Movements Routes Start
+	Route::get('movements','Movements\MovementsController@show');		
+	Route::get('movements/search','Movements\MovementsController@search');	
+	Route::post('movements/add','Movements\MovementsController@insert');			
+	// Movements Routes End
 	
+	// Sale Routes Start
+	Route::get('sales','Sale/SaleController@show');
+	
+	// Sale Routs End
+
 });
 
 

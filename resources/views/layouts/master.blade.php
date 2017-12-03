@@ -8,10 +8,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') | {{ config('app.name') }}</title>
     <!-- Styles -->
-    <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/colors/blue.css" id="theme" rel="stylesheet">
+    <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/colors/blue.css') }}" id="theme" rel="stylesheet">
     @yield('css')
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
@@ -30,9 +30,9 @@
         <!-- ============================================================== -->
     </div>
     <!-- jQuery -->
-    <script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{{ asset('plugins/bower_components/jquery/dist/jquery.min.js') }}"></script>
     <!-- Bootstrap Core JavaScript -->
-    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{{ asset('bootstrap/dist/js/bootstrap.min.js') }}"></script>
     @yield('js')    
 </body>
 </html>

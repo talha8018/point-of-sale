@@ -18,11 +18,40 @@ class StockController extends Controller
     	$companies = Company::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
     	$products = Product::where('status','=','1')->orderBy('id','desc')->get()->toArray();
 		$stock = Stock::join('products','products.id','=','stocks.product_id')
-						->join('companies','products.company_id','=','companies.id')
-						->select('stocks.id','products.id as pid','companies.id as cid','stocks.quantity','stocks.unit_sale_price','stocks.unit_purchase_price','products.name as pname','companies.name as cname')
+						->join('companies','products.company_id','=','companies.id');
+						
+
+		$id = '';
+		$stock = $stock	->select('stocks.id','products.id as pid','companies.id as cid','stocks.quantity','stocks.unit_sale_price','stocks.unit_purchase_price','products.name as pname','companies.name as cname')
 						->orderBy('stocks.id','desc')->get()->toArray();
-    	return view('stocks/stock',compact('companies','products','stock'));
+    	return view('stocks/stock',compact('companies','products','stock','id'));
 	}
+	
+	public function stockSearch()
+	{
+		$input = request();
+		$companies = Company::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
+    	$products = Product::where('status','=','1')->orderBy('id','desc')->get()->toArray();
+		$stock = Stock::join('products','products.id','=','stocks.product_id')
+						->join('companies','products.company_id','=','companies.id');
+						
+		if(!empty($input['product']))
+		{
+			$stock = $stock -> where('product_id',$input['product']);
+		}
+		$id = $input['product'];
+		$stock = $stock	->select('stocks.id','products.id as pid','companies.id as cid','stocks.quantity','stocks.unit_sale_price','stocks.unit_purchase_price','products.name as pname','companies.name as cname')
+						->orderBy('stocks.id','desc')->get()->toArray();
+    	return view('stocks/stock',compact('companies','products','stock','id'));
+	}
+
+	public function getStockByProductID($id)
+    {
+        $stock = Stock::where("product_id",$id)->get()->toArray();
+        return view('stocks.ajax-availabel-stock',compact("stock"));
+	}
+	
+
 	/* 
 	public function insert()
     {

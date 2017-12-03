@@ -16,9 +16,23 @@ Stock
 	                <div class="alert alert-danger alert-dismissable"><b> Error! </b> {{ session()->get('error') }}</div>
 	            @endif
                 <h3 class="box-title m-b-0">Stock List</h3>
-                <p class="text-muted ">Here you can see the stock </p>
+                <p class="text-muted ">Here you can see the stock</p>
                 
-             
+				<form action="/stock/search" method="get">
+					<div class="col-md-3 p-l-0">
+						<select name="product" class="form-control" id="">
+							<option value="">Select</option>
+							<?php foreach($products as $p): ?>
+								<option value="{{$p['id']}}" <?php echo $id==$p['id']?'selected':'' ?> >{{$p['name']}}</option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+					<div class="col-md-3 ">
+						<input type="submit" class="btn btn-primary" value="Search" >
+					</div>
+				</form>
+				<div class="clearfix"></div>
+				<br>
                 @if(count($products)>0)
                 <table class="table table-bordered  custom-table">
                 	<thead>
