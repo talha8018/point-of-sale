@@ -61,7 +61,7 @@ Movements
                 		@foreach($movements as $key => $val)
                 		<tr>
                 			<td>{{$val['bill_id']}}</td>
-                			<td> <?php echo App\Models\Partner\Partner::where('id',$val['partner_id'])->first()->name; ?></td>
+                			<td> <?php if($val['partner_id']!= null){ echo App\Models\Partner\Partner::where('id',$val['partner_id'])->first()->name; } else {echo "visiter"; }?></td>
                 			<td>{{$val['note']}}</td>
                 			<td> {{date('d-m-Y',strtotime($val['created_at']))}} </td>
                             <td class="text-right"> {{number_format($val['debit'],2)}} </td>

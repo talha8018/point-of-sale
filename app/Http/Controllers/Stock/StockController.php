@@ -23,7 +23,7 @@ class StockController extends Controller
 
 		$id = '';
 		$stock = $stock	->select('stocks.id','products.id as pid','companies.id as cid','stocks.quantity','stocks.unit_sale_price','stocks.unit_purchase_price','products.name as pname','companies.name as cname')
-						->orderBy('stocks.id','desc')->get()->toArray();
+						->orderBy('stocks.product_id','desc')->get()->toArray();
     	return view('stocks/stock',compact('companies','products','stock','id'));
 	}
 	

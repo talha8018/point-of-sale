@@ -65,7 +65,13 @@ Route::middleware(['auth'])->group(function () {
 	// Movements Routes End
 	
 	// Sale Routes Start
-	Route::get('sales','Sale/SaleController@show');
+	Route::get('sale','Sale\SaleController@show');
+	Route::post('sale/temp','Sale\SaleController@insertTemp');		
+	Route::get('sale/temp/delete/{product_id}','Sale\SaleController@deleteTemp');		
+	Route::get('sale/temp/clear-all','Sale\SaleController@deleteAll');		
+	Route::get('sale/temp/update-customer','Sale\SaleController@updateCustomer');		
+	Route::get('sale/discount','Sale\SaleController@discount');		
+	Route::post('sale/make','Sale\SaleController@makeSale');				
 	
 	// Sale Routs End
 
