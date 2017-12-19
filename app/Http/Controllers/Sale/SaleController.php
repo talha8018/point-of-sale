@@ -37,11 +37,32 @@ class SaleController extends Controller
         {
             $quantity = 1;
         }
-      
-        if(Stock::where('product_id',$input['product_id'])->sum('quantity')>=$quantity)
+        $code = '';
+       
+        if(!empty($input['barcode']))
         {
-            $barcode = Product::where('id',$input['product_id'])->first()->barcode;
-            $stock = Stock::where('product_id',$input['product_id'])->where('quantity','>','0')->orderBy('id','asc')->get()->toArray();
+            if(Product::where('barcode',$input['barcode'])->exists()===true)
+            {
+                $code = Product::where('barcode',$input['barcode'])->first()->id;
+            }
+        }   
+        if(!empty($input['product_id']))
+        {
+            if(Product::where('id',$input['product_id'])->exists()===true)
+            {
+                $code = $input['product_id'];
+            }
+        }  
+        
+        if(empty($code))
+        {
+            return redirect('/sale')->with('error','Enter valid barcode or product id');
+        }
+
+        if(Stock::where('product_id',$code)->sum('quantity')>=$quantity)
+        {
+            $barcode = Product::where('id',$code)->first()->barcode;
+            $stock = Stock::where('product_id',$code)->where('quantity','>','0')->orderBy('id','asc')->get()->toArray();
             foreach($stock as $s)
             {
                 $unit_profit = $s['unit_sale_price'] - $s['unit_purchase_price'];
@@ -54,7 +75,7 @@ class SaleController extends Controller
                     Temp::create([
                         'bill_id'       => $input['bill_id'],
                         'stock_id'      => $s['id'],
-                        'product_id'    => $input['product_id'],
+                        'product_id'    => $code,
                         'barcode'       => $barcode,
                         'quantity'      => $quantity,
                         'unit_sale_price'   => $s['unit_sale_price'],
@@ -78,7 +99,7 @@ class SaleController extends Controller
                     Temp::create([
                         'bill_id'       => $input['bill_id'],
                         'stock_id'      => $s['id'],
-                        'product_id'    => $input['product_id'],
+                        'product_id'    => $code,
                         'barcode'       => $barcode,
                         'quantity'      => $s['quantity'],
                         'unit_sale_price'   => $s['unit_sale_price'],
@@ -128,6 +149,44 @@ class SaleController extends Controller
             Temp::where('id',$t['id'])->delete();
         }
         return redirect('/sale');  
+    }
+
+    public function history()
+    {
+        $bill = Sale::select('bill_id','partner_name')->groupBy('bill_id','partner_name')->paginate(15);
+        $customers = Partner::where('status','1')->where('type','customer')->get()->toArray();        
+        $data = [];
+        return view('sale/history',compact('bill','data','customers'));
+    }
+
+    public function historySearch()
+    {
+        $data = request();
+        $customers = Partner::where('status','1')->where('type','customer')->get()->toArray();                
+        $bill = Sale::select('bill_id','partner_name');
+        if(!empty($data['bill']))
+        {
+            $bill = $bill -> where('bill_id',$data['bill']);
+        }
+        if(!empty($data['partner_id']))
+        {
+            $bill = $bill -> where('partner_id',$data['partner_id']);
+        }  
+        if(!empty($data['from']) && !empty($data['to']))
+        {
+            $bill = $bill -> whereDate('created_at','>=',$data['from'])-> whereDate('created_at','<=',$data['to']);
+        }
+        $bill = $bill->orderBy('bill_id','desc')->groupBy('bill_id','partner_name')->paginate(15);
+        $data = ['partner'=>$data['partner_id'],'from'=>$data['from'],'to'=>$data['to'],'bill'=>$data['bill']];
+        return view('sale/history',compact('bill','data','customers'));
+    }
+
+
+    public function searchBillByID($bill)
+    {
+        $details = Sale::where('bill_id',$bill)->get()->toArray();
+        $bill = Bill::where('bill_id',$bill)->first();
+        return view('sale/bill-detail',compact('details','bill'));
     }
 
     public function discount()

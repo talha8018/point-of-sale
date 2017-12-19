@@ -25,6 +25,7 @@ Products
                 			<th style="width: 1%;">#</th>
                             <th style="width: 10%;">Company</th>
                 			<th style="width: 18%;">Name</th>
+                			<th>Barcode</th>
                 			<th>Description</th>
                 			<th style="width: 1%;">Action</th>
                 		</tr>
@@ -35,8 +36,9 @@ Products
                             <td>{{$key+1}}</td>
                 			<td>{{App\Models\Company\Company::where('id',$val['company_id'])->first()->name}}</td>
                 			<td>{{$val['name']}}</td>
+                			<td>{{$val['barcode']}}</td>
                 			<td>{{$val['description']}}</td>
-                			<td> <a href="#" class="update-model-link" data-id="{{$val['id']}}" data-cid="{{$val['company_id']}}" data-name="{{$val['name']}}" data-description="{{$val['description']}}"  data-toggle="modal" data-target=".update-model"> <i class="mdi mdi-account-edit"></i> </a> | <a href="product/delete/{{$val['id']}}"> <i class="mdi mdi-delete-forever"></i></a> </td>
+                			<td> <a href="#" class="update-model-link" data-code="{{$val['barcode']}}" data-id="{{$val['id']}}" data-cid="{{$val['company_id']}}" data-name="{{$val['name']}}" data-description="{{$val['description']}}"  data-toggle="modal" data-target=".update-model"> <i class="mdi mdi-account-edit"></i> </a> | <a href="product/delete/{{$val['id']}}"> <i class="mdi mdi-delete-forever"></i></a> </td>
                 		</tr>
                 		@endforeach
                 	</tbody>
@@ -61,7 +63,7 @@ Products
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title" id="mySmallModalLabel">Add Product</h4> </div>
             <div class="modal-body">
-            	<form method="post" action="product/add">
+            	<form method="post" id="add-product" action="product/add">
             		{{ csrf_field() }}
                     <label>Companies</label>
                     <select name="company_id" required class="company_id form-control" required="required">
@@ -74,6 +76,9 @@ Products
                     
             		<label>Name</label>
             		<input type="text" name="name" class="form-control" required="required" placeholder="Name">
+            		<br>
+                    <label>Barcode</label>
+            		<input type="text" name="barcode" required="required" id="barcode" class="form-control"  placeholder="Barcode">
             		<br>
             		<label>Description</label>
             		<textarea class="form-control" name="description" required="required" rows="4"></textarea>
@@ -94,7 +99,7 @@ Products
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title" id="mySmallModalLabel">Update Product</h4> </div>
             <div class="modal-body">
-            	<form method="post" action="product/update">
+            	<form method="post" id="up-product" action="product/update">
             		{{ csrf_field() }}
                     <label>Companies</label>
                     <select name="company_id" required="required" id="cid" class="company_id form-control">
@@ -108,6 +113,9 @@ Products
             		<input type="hidden" name="id" id="id">
             		<label>Name</label>
             		<input type="text" required="required" name="name" id="name" class="form-control" placeholder="Name">
+            		<br>
+                    <label>Barcode</label>
+            		<input type="text" name="barcode" required="required" id="barcode-up" class="form-control"  placeholder="Barcode">
             		<br>
             		<label>Description</label>
             		<textarea class="form-control" required="required" id="description" name="description" rows="4"></textarea>
@@ -125,18 +133,68 @@ Products
 
 @section('js')
 <script type="text/javascript">
-
+   
 	$(".update-model-link").click(function(){
         var id = $(this).data('id');
 		var cid = $(this).data('cid');
 		var name = $(this).data('name');
 		var description = $(this).data('description');
+		var code = $(this).data('code');
 
 		$("#id").val(id);
         $("#name").val(name);
+        $("#barcode-up").val(code);
 		
         $("#cid").val(cid);
 		$("#description").val(description);
 	});
+
+
+    $("#add-product").submit(function() {
+        var barcode = $("#barcode").val();
+        var submit = false;
+        $.ajax({
+                url  : '/product/barcode/exist/'+barcode,
+                type : 'get',
+                success: function(data){
+                    if(data == 'true')
+                    {
+                        submit = true;
+                    }
+                }
+            })
+
+        if (submit===true) {
+           return true; 
+        }
+        alert('Barcode already exists');
+        return false;
+    });
+
+
+
+    $("#up-product").submit(function() {
+        var id = $("#id").val();
+        var barcode = $("#barcode-up").val();
+        var submit = false;
+        $.ajax({
+                url  : '/product/barcode/update/exist/'+barcode+'/'+id,
+                type : 'get',
+                success: function(data){
+                    if(data == 'true')
+                    {
+                        submit = true;
+                    }
+                }
+            })
+
+        if (submit===true) {
+           return true; 
+        }
+        alert('Barcode already exists');
+        return false;
+    });
+
+
 </script>
 @endsection

@@ -27,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('product/add','Product\ProductController@insert');
 	Route::post('product/update','Product\ProductController@update');
 	Route::get('product/delete/{id}','Product\ProductController@delete');
+	Route::get('product/barcode/exist/{barcode}','Product\ProductController@barcodeExists');
+	Route::get('product/barcode/update/exist/{barcode}/{id}','Product\ProductController@barcodeUpExists');
 	Route::post('product/ajax/get-products','Product\ProductController@getProductsByCompanyId');
 	// Product Routes End
 
@@ -72,6 +74,10 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('sale/temp/update-customer','Sale\SaleController@updateCustomer');		
 	Route::get('sale/discount','Sale\SaleController@discount');		
 	Route::post('sale/make','Sale\SaleController@makeSale');				
+	Route::get('sale/history','Sale\SaleController@history');	
+	Route::get('sale/history/search','Sale\SaleController@historySearch');
+	Route::get('sale/bill/{bill}','Sale\SaleController@searchBillByID');		
+			
 	
 	// Sale Routs End
 

@@ -23,7 +23,8 @@ class ProductController extends Controller
     	$response = Product::create([
     		'name' => $input['name'],
     		'company_id' => $input['company_id'],
-    		'description' => $input['description'],
+			'description' => $input['description'],
+			'barcode'	=> $input['barcode']
 		]);
 		Trail::makeTrail('Product Page','',$response->toJson(),'1');
     	return redirect('/products')->with('message','Product has been added.');
@@ -36,7 +37,8 @@ class ProductController extends Controller
 		$response = Product::where('id','=',$input['id'])->update([
     		'name' => $input['name'],
     		'company_id' => $input['company_id'],
-    		'description' => $input['description'],
+			'description' => $input['description'],
+			'barcode'	=> $input['barcode']
 		]);
 		$new_data = Product::where('id','=',$input['id'])->get()->toJson();
 		Trail::makeTrail('Product Page',$old_data,$new_data,'3');
@@ -59,5 +61,29 @@ class ProductController extends Controller
         $input = request();
         $products = Product::where('company_id',$input['company_id'])->where('status','=','1')->orderBy('id','desc')->get()->toArray();
         return view('products/ajax-products',compact('products'));
-    }
+	}
+	
+	public function barcodeExists($barcode)
+	{
+		if(Product::where("barcode",$barcode)->exists()===true)
+		{
+			return 'false';
+		}
+		else
+		{
+			return 'true';
+		}
+	}
+
+	public function barcodeUpExists($barcode,$id)
+	{
+		if(Product::where("barcode",$barcode)->where('id','!=',$id)->exists()===true)
+		{
+			return 'false';
+		}
+		else
+		{
+			return 'true';
+		}
+	}
 }

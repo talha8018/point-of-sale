@@ -31,13 +31,17 @@ Purchase
                     
                   <input type="hidden" name="bill_id" value="{{$incr['count']}}">
                     
-                    <div class="col-md-6 p-l-0">
+                    <div class="col-md-4 p-l-0">
                         <label for="">Product ID</label>
-                        <input type="text"  class="form-control" value="" required name="product_id" placeholder="Product ID">
+                        <input type="text"  class="form-control" value=""  name="product_id" placeholder="Product ID">
                     </div>
-                   <div class="col-md-6 p-l-0">
+                    <div class="col-md-4 p-l-0">
+                        <label for="">Barcode</label>
+                        <input type="text"  class="form-control" value=""  name="barcode" placeholder="Barcode">
+                    </div>
+                   <div class="col-md-4 p-l-0">
                         <label for="">Quantity</label>
-                        <input type="text"  class="form-control" value=""  name="quantity" placeholder="Quantity">
+                        <input type="number"  class="form-control" value=""  name="quantity" placeholder="Quantity">
                     </div>
                     
                     <input type="submit"  class="btn btn-outline btn-default" value="Insert to Invoice">
