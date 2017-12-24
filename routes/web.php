@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::middleware(['auth'])->group(function () {
 	Route::get('dashboard','Dashboard\DashboardController@show')->name('dashboard');
 
@@ -78,7 +77,10 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('sale/history/search','Sale\SaleController@historySearch');
 	Route::get('sale/bill/{bill}','Sale\SaleController@searchBillByID');		
 			
-	
+	Route::get('sale/edit','Sale\SaleController@showEdit');			
+	Route::get('sale/get-bill/{bill}','Sale\SaleController@getBill');			
+	Route::post('sale/edit','Sale\SaleController@editBill');			
+	Route::post('sale/delete','Sale\SaleController@deleteBill');			
 	// Sale Routs End
 
 });

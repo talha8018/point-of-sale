@@ -44,15 +44,18 @@ class MovementsController extends Controller
         $input = request();
         $debit = $credit = 0;
         $type = '';
+        $old_balance = Movement::where('id',$input['partner'])->first()->balance;
         if($input['type']=='d')
         {
             $debit = $input['amount'];
             $type = 'dealer';
+            Movement::where('id',$input['partner'])->update(['balance'=> $old_balance - $input['amount']]);
         }
         else
         {
             $credit = $input['amount'];
             $type = 'customer';
+            Movement::where('id',$input['partner'])->update(['balance'=> $old_balance + $input['amount']]);            
         }
 
         Movement::create([

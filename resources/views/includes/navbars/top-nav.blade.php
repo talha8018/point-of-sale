@@ -82,6 +82,7 @@
                         <ul class="nav nav-second-level">
                             <li> <a href="{{url('sale')}}"><i class=" fa-fw">S</i><span class="hide-menu">Sale</span></a> </li>
                             <li> <a href="{{url('sale/history')}}"><i class=" fa-fw">H</i><span class="hide-menu">History</span></a> </li>
+                            <li> <a href="{{url('sale/edit')}}"><i class=" fa-fw">E</i><span class="hide-menu">Edit & Delete</span></a> </li>
                         </ul>
                     </li>    
                     <li> <a href="{{url('stock')}}" class="waves-effect"> Stock Section </a></li>

@@ -19,7 +19,7 @@ class ProductController extends Controller
     }
     public function insert()
     {
-    	$input = request();
+		$input = request();
     	$response = Product::create([
     		'name' => $input['name'],
     		'company_id' => $input['company_id'],

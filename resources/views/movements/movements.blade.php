@@ -88,12 +88,12 @@ Movements
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="mySmallModalLabel">Add Company</h4> </div>
+                <h4 class="modal-title" id="mySmallModalLabel">Add Movement</h4> </div>
             <div class="modal-body">
             	<form method="post" action="movements/add">
             		{{ csrf_field() }}
             		<label>Bill</label>
-            		<input type="text"  name="bill" class="form-control" placeholder="Bill #">
+            		<input type="text"  required="required" name="bill" class="form-control" placeholder="Bill #">
             		<br>
             		<label>Partner</label>
                     <select name="partner" required="required" id="" class="form-control">

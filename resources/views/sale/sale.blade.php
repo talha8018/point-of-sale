@@ -22,7 +22,6 @@ Purchase
 	            @endif
                 
                 
-                
                 <h3 class="box-title m-b-0">Sale</h3>
                 <p class="text-muted ">Here you can Sale the stock </p>
                 <hr>
@@ -127,15 +126,15 @@ Purchase
                 <a class="btn btn-danger" href="{{ url('sale/temp/clear-all') }}">Clear Invoice</a>            
             </div>
             <div class="col-md-6">
-                <form action="{{ url('sale/make') }}" method="post">
+                <form action="{{ url('sale/make') }}" id="make_sale" method="post">
                     {{csrf_field()}}
                     <input type="hidden" id="total" name="total" value="{{$dtsp}}">
                     <input type="hidden" name="partner_id" value="<?php  echo $temp[0]['partner_id']; ?>">
-                    <input type="hidden" name="bill_id" value="{{$incr['count']}}">
+                    <input type="hidden" name="bill_id" id="sbill_id" value="{{$incr['count']}}">
                     <input type="number" required min="<?php if(empty($temp[0]['partner_id'])){ echo round($dtsp); }else{ echo '0'; }  ?>" max="" placeholder="Received amount from Customer?" step="0.01" name="credit" id="credit" class="form-control">
             </div>
             <div class="col-md-3 p-r-0">
-                    <input type="submit" class="btn btn-success pull-right" value="Purchase">
+                    <input type="submit" class="btn btn-success pull-right" value="Sale">
                 </form>
             </div>
           
@@ -179,7 +178,12 @@ Purchase
         var total = $("#total").val();
         var credit = $(this).val();
         var re = credit - total ;
-        $("#rs").html("RS. "+re);
+        $("#rs").html("RS. "+re.toFixed(2));
+    });
+
+    $("#make_sale").submit(function() {
+        var bill = $("#sbill_id").val();
+        var w = window.open("sale/get-bill/"+bill, "popupWindow", "width=600, height=800, scrollbars=yes");    
     });
 
 </script>

@@ -15,6 +15,7 @@ use App\Models\Product\Product;
 use Auth;
 use App\Models\Increment\Increment;
 use DB;
+use App\User;
 
 class SaleController extends Controller
 {
@@ -24,6 +25,11 @@ class SaleController extends Controller
         $temp   = Temp::select(DB::raw('sum(quantity) as quantity'),'product_id','bill_id','unit_sale_price','partner_id','partner_name','d_unit_sale_price','discount','d_unit_profit')->groupBy('product_id','bill_id','unit_sale_price','partner_id','partner_name','d_unit_sale_price','discount','d_unit_profit')->get()->toArray();
         $incr   = Increment::where('type','customer')->first();
     	return view('sale/sale',compact('customers','temp','incr'));
+    }
+
+    public function showEdit()
+    {
+     	return view('sale/edit-bill');   
     }
 
     public function insertTemp()
@@ -334,5 +340,85 @@ class SaleController extends Controller
 
     }
 
+
+    public function editBill()
+    {
+        $input = request();
+        $sales = Sale::where('bill_id',$input['bill_id'])->get()->toArray();
+        if(Movement::where('bill_id',$input['bill_id'])->where('type','customer')->exists()===true)
+        {
+            
+            $partner_id = Movement::where('bill_id',$input['bill_id'])->first()->partner_id;
+            $remaining = Bill::where('bill_id',$input['bill_id'])->first()->remaining;
+            $balance = Partner::where('id',$partner_id)->first()->balance;
+
+            Partner::where('id',$partner_id)->update(['balance'=>$remaining + $balance]);
+            Movement::where('bill_id',$input['bill_id'])->delete();
+            Bill::where('bill_id',$input['bill_id'])->delete();
+
+            foreach ($sales as $key => $sale) {
+                unset($sale['id']);
+                Temp::create($sale);
+            }
+            Sale::where('bill_id',$input['bill_id'])->delete();
+            $next_bill_id = Increment::where('type','customer')->first()->count;
+            Temp::where('partner_id',$partner_id)->update(['bill_id'=>$next_bill_id]);
+            return redirect('/sale')->with('message','Now you can edit this bill '.$input['bill_id']);
+
+        }
+    }
+
+    public function getBill($bill)
+    {
+
+        $sales = Sale::where('bill_id',$bill)->get()->toArray(); 
+        if(!$sales)
+        {
+            $sales = Temp::where('bill_id',$bill)->get()->toArray();   
+        }
+
+        if(empty($sales[0]['partner_id']))
+        {
+            $customer = '';
+        }       
+        else
+        {
+            $customer = Partner::where('id',$sales[0]['partner_id'])->first()->name;
+        }
+        $person = User::where('id',$sales[0]['added_by'])->first()->name;
+        return view('sale/generate-bill',compact('sales','bill','customer','person'));
+    }
+
+    public function deleteBill()
+    {
+        $input = request();
+        $sales = Sale::where('bill_id',$input['bill_id'])->get()->toArray();
+        if(Movement::where('bill_id',$input['bill_id'])->where('type','customer')->exists()===true)
+        {
+            $partner_id = Movement::where('bill_id',$input['bill_id'])->first()->partner_id;
+            $remaining = Bill::where('bill_id',$input['bill_id'])->first()->remaining;
+            $balance = Partner::where('id',$partner_id)->first()->balance;
+
+            Partner::where('id',$partner_id)->update(['balance'=>$remaining + $balance]);
+            Movement::where('bill_id',$input['bill_id'])->delete();
+            Bill::where('bill_id',$input['bill_id'])->delete();
+
+            foreach ($sales as $key => $sale) {
+                unset($sale['id']);
+                Temp::create($sale);
+            }
+            Sale::where('bill_id',$input['bill_id'])->delete();
+            $temp = Temp::get(['stock_id','quantity','id'])->toArray();
+            foreach($temp as $t)
+            {
+                $quantity = Stock::where('id',$t['stock_id'])->first()->quantity;
+                Stock::where("id",$t['stock_id'])->update(['quantity'=>$quantity + $t['quantity']]);
+                Temp::where('id',$t['id'])->delete();
+            }
+            return redirect('/sale/edit')->with('message','Bill has been deleted');
+            
+        }
+        
+    }
     
 }

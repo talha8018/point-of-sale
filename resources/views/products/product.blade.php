@@ -152,23 +152,29 @@ Products
 
     $("#add-product").submit(function() {
         var barcode = $("#barcode").val();
-        var submit = false;
+        
         $.ajax({
                 url  : '/product/barcode/exist/'+barcode,
                 type : 'get',
+                async:false,
                 success: function(data){
+
                     if(data == 'true')
                     {
-                        submit = true;
+                        return true;
                     }
+                    else
+                    {
+                        return false;
+                    alert('Barcode already exists');
+                         
+                    }
+
+                    
                 }
             })
-
-        if (submit===true) {
-           return true; 
-        }
-        alert('Barcode already exists');
-        return false;
+             
+        /* */
     });
 
 
@@ -188,9 +194,10 @@ Products
                 }
             })
 
-        if (submit===true) {
+        if (submit==true) {
            return true; 
         }
+
         alert('Barcode already exists');
         return false;
     });
