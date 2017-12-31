@@ -16,7 +16,7 @@ Partners
                 <p class="text-muted ">Here you can add, edit and delete the partner </p>
                 
                 <div class="col-md-1 p-l-0">
-                	<button  class="btn btn-outline btn-default btn-xs" data-toggle="modal" data-target=".add-model">Add New Partner</button>
+					<a href="{{url('partner/add-partner')}}" class="btn btn-outline btn-default btn-xs" >Add Partner</a>
                 </div>
                 @if(count($partners)>0)
                 <table class="table table-bordered  custom-table">
@@ -24,6 +24,7 @@ Partners
                 		<tr>
                 			<th style="width: 1%;">#</th>
                 			<th>Name</th>
+                			<th>Address</th>
                 			<th>Type</th>
                 			<th>Phone</th>
                             <th>Balance</th>
@@ -35,10 +36,11 @@ Partners
                 		<tr>
                 			<td>{{$key+1}}</td>
                 			<td>{{$val['name']}}</td>
+                			<td>{{$val['address']}}</td>
                 			<td>{{ucfirst($val['type'])}}</td>
                 			<td>{{$val['phone']}}</td>
                 			<td>{{number_format($val['balance'],2)}}</td>
-                			<td> <a href="#" class="update-model-link" data-id="{{$val['id']}}" data-phone="{{$val['phone']}}" data-type="{{$val['type']}}" data-name="{{$val['name']}}" data-toggle="modal" data-target=".update-model"> <i class="mdi mdi-account-edit"></i> </a> | <a href="partner/delete/{{$val['id']}}"> <i class="mdi mdi-delete-forever"></i></a> </td>
+                			<td> <a href="<?php echo url('partner/update-partner').'/'.$val['id']; ?>" class="update-model-link" data-id="{{$val['id']}}" data-phone="{{$val['phone']}}" data-type="{{$val['type']}}" data-name="{{$val['name']}}" > <i class="mdi mdi-account-edit"></i> </a> | <a href="partner/delete/{{$val['id']}}"> <i class="mdi mdi-delete-forever"></i></a> </td>
                 		</tr>
                 		@endforeach
                 	</tbody>
@@ -55,67 +57,8 @@ Partners
 </div>
 
 
-<!--add model-->
-<div class="modal fade add-model" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="mySmallModalLabel">Add Partner</h4> </div>
-            <div class="modal-body">
-            	<form method="post" action="partner/add">
-            		{{ csrf_field() }}
-            		<label>Name</label>
-            		<input type="text" required="required" name="name" class="form-control" placeholder="Name">
-            		<br>
-                    <label>Phone</label>
-            		<input type="text" required="required" name="phone" class="form-control" placeholder="Phone">
-            		<br>
-            		<label>Type</label>
-            		<select name="type" id="" class="form-control" required="required">
-                        <option value="">Select</option>
-                        <option value="dealer">Dealer</option>
-                        <option value="customer">Customer</option>
-                    </select>
-            		<br>
-            		<input type="submit" name="" class="btn btn-block btn-outline btn-primary" value="Add">
-            	</form>
-            </div>
-        </div>
-    </div>
-</div>
 
 
-<!--update model-->
-<div class="modal fade update-model" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="mySmallModalLabel">Update Partner</h4> </div>
-            <div class="modal-body">
-            	<form method="post" action="partner/update">
-            		{{ csrf_field() }}
-            		<input type="hidden" name="id" id="id">
-            		<label>Name</label>
-            		<input type="text" required="required" name="name" id="name" class="form-control" placeholder="Name">
-            		<br>
-                    <label>Phone</label>
-            		<input type="text" required="required" id="phone" name="phone" class="form-control" placeholder="Phone">
-            		<br>
-            		<label>Type</label>
-            		<select name="type" id="type" class="form-control" required="required">
-                        <option value="">Select</option>
-                        <option value="dealer">Dealer</option>
-                        <option value="customer">Customer</option>
-                    </select>
-            		<br>
-            		<input type="submit" name="" class="btn btn-block btn-outline btn-primary" value="Update">
-            	</form>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('css')

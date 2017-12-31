@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Movement\Movement;
 use App\Models\Partner\Partner;
+use App\Models\Trail\Trail;
+
 
 class MovementsController extends Controller
 {
@@ -44,21 +46,27 @@ class MovementsController extends Controller
         $input = request();
         $debit = $credit = 0;
         $type = '';
-        $old_balance = Movement::where('id',$input['partner'])->first()->balance;
-        if($input['type']=='d')
+        $partner_data = Partner::where('id',$input['partner'])->first();
+        $old_balance = $partner_data['balance'];
+        $old_data = Partner::where('id',$input['partner'])->get()->toJson();
+
+
+        if($partner_data['type']=='dealer')
         {
             $debit = $input['amount'];
             $type = 'dealer';
-            Movement::where('id',$input['partner'])->update(['balance'=> $old_balance - $input['amount']]);
+            Partner::where('id',$input['partner'])->update(['balance'=> $old_balance - $input['amount']]);
         }
         else
         {
             $credit = $input['amount'];
             $type = 'customer';
-            Movement::where('id',$input['partner'])->update(['balance'=> $old_balance + $input['amount']]);            
+            Partner::where('id',$input['partner'])->update(['balance'=> $old_balance + $input['amount']]);            
         }
+        $new_data = Partner::where('id',$input['partner'])->get()->toJson();
+        Trail::makeTrail('Create Movement and update balance',$old_data,$new_data,'1');
 
-        Movement::create([
+        $movement = Movement::create([
             'bill_id'       => $input['bill'],
             'type'          => $type,
             'partner_id'    => $input['partner'],
@@ -66,6 +74,7 @@ class MovementsController extends Controller
             'credit'        => $credit,
             'note'          => $input['note']
         ]);
+        Trail::makeTrail('Movement Page '.$movement->id,'','','2');
         return redirect('/movements')->with('message','Movement has been added.');
     }
 }

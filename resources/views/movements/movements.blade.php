@@ -93,7 +93,7 @@ Movements
             	<form method="post" action="movements/add">
             		{{ csrf_field() }}
             		<label>Bill</label>
-            		<input type="text"  required="required" name="bill" class="form-control" placeholder="Bill #">
+            		<input type="text"  name="bill" class="form-control" placeholder="Bill #">
             		<br>
             		<label>Partner</label>
                     <select name="partner" required="required" id="" class="form-control">
@@ -103,12 +103,7 @@ Movements
                         <?php endforeach; ?>
                     </select>
             		<br>
-                    <label>Type</label>
-                    <div class="clearfix"></div>
-                    <label class="radio-inline"><input type="radio" value="d" checked name="type">Debit</label>
-                    <label class="radio-inline"><input type="radio" value="c" name="type">Credit</label>
-                    <div class="clearfix"></div>
-            		<br>
+                    
                     <label>Amount</label>
             		<input type="number" step="0.01" required name="amount" class="form-control" placeholder="Amount" >
                     <br>

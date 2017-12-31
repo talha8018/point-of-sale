@@ -16,6 +16,7 @@ class CreateTempPurchaseTable extends Migration
         Schema::create('temp_purchases', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('bill_id');
+            $table->string('stock_id')->nullable();
             $table->integer('partner_id');
             $table->string('partner_name');
             $table->integer('product_id');

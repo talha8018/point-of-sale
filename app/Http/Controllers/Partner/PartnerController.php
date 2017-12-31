@@ -17,11 +17,20 @@ class PartnerController extends Controller
     }
     public function insert()
     {
-    	$input = request();
+		$input = request();
+		$this -> validate($input,[
+			'name'	=> 'required',
+			'phone'	=> 'required',
+			'type'	=> 'required',
+			'address'	=> 'required',
+
+		]);
+
     	$response = Partner::create([
     		'name' => $input['name'],
     		'phone' => $input['phone'],
-    		'type' => $input['type'],
+			'type' => $input['type'],
+			'address' => $input['address']
 		]);
 		Trail::makeTrail('Partners Page','',$response->toJson(),'1');
     	return redirect('/partners')->with('message','Partner has been added.');
@@ -29,6 +38,13 @@ class PartnerController extends Controller
     public function update()
     {
 		$input = request();
+		$this -> validate($input,[
+			'name'	=> 'required',
+			'phone'	=> 'required',
+			'type'	=> 'required',
+			'address'	=> 'required',
+		]);
+
 		$old_data = Partner::where('id','=',$input['id'])->get()->toJson();
     	Partner::where('id','=',$input['id'])->update([
     		'name' => $input['name'],
@@ -48,5 +64,18 @@ class PartnerController extends Controller
 		$new_data = Partner::where('id','=',$id)->get()->toJson();
 		Trail::makeTrail('Partners Page',$old_data,$new_data,'4');
     	return redirect('/partners')->with('message','Partner has been deleted.'); 
-    }
+	}
+	
+
+	public function addPartner()
+	{
+		return view('partners/add-partner');
+	}
+
+
+	public function updatePartner($id)
+	{
+		$partner = Partner::where('status','1')->where('id',$id)->first();
+		return view('partners/update-partner',compact('partner'));
+	}
 }

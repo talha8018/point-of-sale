@@ -26,6 +26,11 @@ class PurchaseController extends Controller
     	return view('purchase/purchase',compact('dealers','temp','companies','incr'));
     }
 
+    public function showEdit()
+    {
+     	return view('purchase/edit-bill');   
+    }
+
     public function history()
     {
         $bill = Bill::orderBy('bill_id','desc')->paginate(15);
@@ -69,6 +74,13 @@ class PurchaseController extends Controller
         }
         else
         {
+            if(Temp::where('product_id',$input['product'])->exists() == true)
+            {
+                $quantity = Temp::where('product_id',$input['product'])->first()->quantity;
+                Temp::where('product_id',$input['product'])->update(['quantity'=>$quantity + $input['quantity']]);
+                 return redirect('/purchases');
+            }
+
             $barcode = Product::where('id',$input['product'])->first()->barcode;
             $partner_name = Partner::where('id',$input['dealer'])->first()->name;
             Temp::create([
@@ -105,6 +117,8 @@ class PurchaseController extends Controller
             'paid'      => $input['debit'],
             'remaining' => $input['total'] - $input['debit']
         ]);
+
+                
         $this->movements($input);
         $this->updateStock($input['bill_id']);
         $this->deleteAll();
@@ -113,9 +127,68 @@ class PurchaseController extends Controller
         return redirect('/purchases')->with('message','This Bill # '.$input['bill_id'].' has been added.');
     }
 
+    public function deleteBill()
+    {
+        $input = request();
+        $purchases = Purchase::where('bill_id',$input['bill_id'])->get()->toArray();
+        if(Movement::where('bill_id',$input['bill_id'])->where('type','dealer')->exists()===true)
+        {
+            $partner_id = Movement::where('bill_id',$input['bill_id'])->where('type','dealer')->first()->partner_id;
+            $remaining = Bill::where('bill_id',$input['bill_id'])->first()->remaining;
+            $balance = Partner::where('id',$partner_id)->first()->balance;
+
+            Partner::where('id',$partner_id)->update(['balance'=>$balance - $remaining]);
+            Movement::where('bill_id',$input['bill_id'])->where('type','dealer')->delete();
+            Bill::where('bill_id',$input['bill_id'])->delete();
+
+            foreach ($purchases as $key => $purchase) {
+                unset($purchase['id']);
+                $old_qty = Stock::where('id',$purchase['stock_id'])->first()->quantity;
+                Stock::where('id',$purchase['stock_id'])->update(['quantity'=>abs($old_qty - $purchase['quantity'])]);
+                Temp::create($purchase);
+            }
+
+
+            Purchase::where('bill_id',$input['bill_id'])->delete();
+            $next_bill_id = Increment::where('type','dealer')->first()->count;
+            Temp::where('partner_id',$partner_id)->update(['bill_id'=>$next_bill_id]);
+            Temp::truncate();
+             return redirect('/purchase/edit')->with('message','Bill has been deleted');
+        }
+    }
+
+    public function editBill()
+    {
+        $input = request();
+        $purchases = Purchase::where('bill_id',$input['bill_id'])->get()->toArray();
+        if(Movement::where('bill_id',$input['bill_id'])->where('type','dealer')->exists()===true)
+        {
+            $partner_id = Movement::where('bill_id',$input['bill_id'])->where('type','dealer')->first()->partner_id;
+            $remaining = Bill::where('bill_id',$input['bill_id'])->first()->remaining;
+            $balance = Partner::where('id',$partner_id)->first()->balance;
+
+            Partner::where('id',$partner_id)->update(['balance'=>$balance - $remaining]);
+            Movement::where('bill_id',$input['bill_id'])->where('type','dealer')->delete();
+            Bill::where('bill_id',$input['bill_id'])->delete();
+
+            foreach ($purchases as $key => $purchase) {
+                unset($purchase['id']);
+                $old_qty = Stock::where('id',$purchase['stock_id'])->first()->quantity;
+                Stock::where('id',$purchase['stock_id'])->update(['quantity'=> abs($old_qty - $purchase['quantity'])]);
+                Temp::create($purchase);
+            }
+
+
+            Purchase::where('bill_id',$input['bill_id'])->delete();
+            $next_bill_id = Increment::where('type','dealer')->first()->count;
+            Temp::where('partner_id',$partner_id)->update(['bill_id'=>$next_bill_id]);
+            return redirect('/purchases')->with('message','Now you can edit this bill '.$input['bill_id']);
+        }
+    }
+
     public function updateStock($bill_id)
     {
-        $purchase = Purchase::where('bill_id',$bill_id)->get(['product_id','barcode','unit_purchase_price','quantity','unit_sale_price'])
+        $purchase = Purchase::where('bill_id',$bill_id)->get(['id','product_id','barcode','unit_purchase_price','quantity','unit_sale_price'])
                     ->toArray();
         foreach ($purchase as $key => $p) 
         {
@@ -124,13 +197,13 @@ class PurchaseController extends Controller
             {
                 $old_qty = Stock::where('product_id',$p['product_id'])->where('unit_purchase_price',$p['unit_purchase_price'])->where('unit_sale_price',$p['unit_sale_price'])->first()->quantity;
                 $old_qty = $old_qty + $p['quantity'];
-                Stock::where('product_id',$p['product_id'])->update(['quantity'=>$old_qty]);
+                Stock::where('product_id',$p['product_id'])->where('unit_purchase_price',$p['unit_purchase_price'])->where('unit_sale_price',$p['unit_sale_price'])->update(['quantity'=>$old_qty]);
+                $stock_id = Stock::where('product_id',$p['product_id'])->where('unit_purchase_price',$p['unit_purchase_price'])->where('unit_sale_price',$p['unit_sale_price'])->first()->id;
             }
             else 
             {
-                
-                Stock::where('product_id',$p['product_id'])->update(['unit_sale_price'=>$p['unit_sale_price']]);
-                Stock::create([
+                //Stock::where('product_id',$p['product_id'])->update(['unit_sale_price'=>$p['unit_sale_price']]);
+                $stock_id = Stock::create([
                     'product_id'    => $p['product_id'],
                     'barcode'       => $p['barcode'],
                     'quantity'      => $p['quantity'],
@@ -138,7 +211,10 @@ class PurchaseController extends Controller
                     'unit_sale_price'       => $p['unit_sale_price'],
                     'added_by'      => Auth::user()->id
                     ]);
+                $stock_id = $stock_id->id; 
             }
+
+            Purchase::where('id',$p['id'])->update(['stock_id'=>$stock_id]);
         }
     }
 

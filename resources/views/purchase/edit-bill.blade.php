@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-Sale
+Purchase Edit 
 @endsection
 
 @section('content')
@@ -17,7 +17,7 @@ Sale
         </div>
         <div class="col-md-6">
 			
-            <form action="/sale/edit" method="post">
+            <form action="/purchase/edit" method="post">
                 {{csrf_field()}}
                 <label for="">Edit Bill</label>
                 <input type="number" name="bill_id" class="form-control" placeholder="Bill #">
@@ -28,7 +28,7 @@ Sale
 
         <div class="col-md-6">
 			
-            <form action="/sale/delete" method="post">
+            <form action="/purchase/delete" method="post">
                 {{csrf_field()}}
                 <label for="">Delete Bill</label>
                 <input type="number" name="bill_id" class="form-control" placeholder="Bill #">

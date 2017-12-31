@@ -20,6 +20,20 @@ class ProductController extends Controller
     public function insert()
     {
 		$input = request();
+
+
+		$this -> validate($input,[
+			'name'	=> 'required',
+			'company_id'	=> 'required',
+			'description'	=> 'required',
+			'barcode'	=> 'required',
+		]);
+		if($this -> barcodeExists($input['barcode']))
+		{
+			$companies = Company::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
+			$error = 'Barcode already in use';
+			return view('products/add-product',compact('companies','input','error'));
+		}
     	$response = Product::create([
     		'name' => $input['name'],
     		'company_id' => $input['company_id'],
@@ -28,11 +42,38 @@ class ProductController extends Controller
 		]);
 		Trail::makeTrail('Product Page','',$response->toJson(),'1');
     	return redirect('/products')->with('message','Product has been added.');
-    }
+	}
+	
+
+	public function addProduct()
+	{
+		$companies = Company::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
+		return view('products/add-product',compact('companies'));
+	}
+
+	public function updateProduct($id)
+	{
+		$products = Product::where('id',$id)->where('status','=','1')->first();
+		$companies = Company::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
+		return view('products/update-product',compact('companies','products'));		
+	}
 
     public function update()
     {
-    	$input = request();
+		$input = request();
+		$this -> validate($input,[
+			'name'	=> 'required',
+			'company_id'	=> 'required',
+			'description'	=> 'required',
+			'barcode'	=> 'required',
+		]);
+		if($this -> barcodeUpExists($input['barcode'],$input['id']))
+		{
+			$companies = Company::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
+			$error = 'Barcode already in use';
+			return view('products/update-product',compact('companies','input','error'));
+		}
+
 		$old_data = Product::where('id','=',$input['id'])->get()->toJson();
 		$response = Product::where('id','=',$input['id'])->update([
     		'name' => $input['name'],
@@ -65,25 +106,25 @@ class ProductController extends Controller
 	
 	public function barcodeExists($barcode)
 	{
-		if(Product::where("barcode",$barcode)->exists()===true)
+		if(Product::where("barcode",$barcode)->where('status','1')->exists()===true)
 		{
-			return 'false';
+			return true;
 		}
 		else
 		{
-			return 'true';
+			return false;
 		}
 	}
 
 	public function barcodeUpExists($barcode,$id)
 	{
-		if(Product::where("barcode",$barcode)->where('id','!=',$id)->exists()===true)
+		if(Product::where("barcode",$barcode)->where('id','!=',$id)->where('status','1')->exists()===true)
 		{
-			return 'false';
+			return true;
 		}
 		else
 		{
-			return 'true';
+			return false;
 		}
 	}
 }

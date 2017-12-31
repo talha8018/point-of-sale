@@ -348,12 +348,12 @@ class SaleController extends Controller
         if(Movement::where('bill_id',$input['bill_id'])->where('type','customer')->exists()===true)
         {
             
-            $partner_id = Movement::where('bill_id',$input['bill_id'])->first()->partner_id;
+            $partner_id = Movement::where('bill_id',$input['bill_id'])->where('type','customer')->first()->partner_id;
             $remaining = Bill::where('bill_id',$input['bill_id'])->first()->remaining;
             $balance = Partner::where('id',$partner_id)->first()->balance;
 
             Partner::where('id',$partner_id)->update(['balance'=>$remaining + $balance]);
-            Movement::where('bill_id',$input['bill_id'])->delete();
+            Movement::where('bill_id',$input['bill_id'])->where('type','customer')->delete();
             Bill::where('bill_id',$input['bill_id'])->delete();
 
             foreach ($sales as $key => $sale) {

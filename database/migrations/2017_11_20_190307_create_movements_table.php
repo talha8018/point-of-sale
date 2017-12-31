@@ -15,7 +15,7 @@ class CreateMovementsTable extends Migration
     {
         Schema::create('movements', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('bill_id');
+            $table->integer('bill_id')->nullable();
             $table->integer('partner_id')->nullable();
             $table->string('type','10');
             $table->double('debit','15','2')->nullable();

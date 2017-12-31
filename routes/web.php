@@ -29,6 +29,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('product/barcode/exist/{barcode}','Product\ProductController@barcodeExists');
 	Route::get('product/barcode/update/exist/{barcode}/{id}','Product\ProductController@barcodeUpExists');
 	Route::post('product/ajax/get-products','Product\ProductController@getProductsByCompanyId');
+	Route::get('products/add','Product\ProductController@addProduct');
+	Route::get('products/update/{id}','Product\ProductController@updateProduct');
 	// Product Routes End
 
 	// Stock Routes Start
@@ -45,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('partner/add','Partner\PartnerController@insert');	
 	Route::post('partner/update','Partner\PartnerController@update');	
 	Route::get('partner/delete/{id}','Partner\PartnerController@delete');	
+	Route::get('partner/add-partner','Partner\PartnerController@addPartner');	
+	Route::get('partner/update-partner/{id}','Partner\PartnerController@updatePartner');	
 	// Parnter Routes End
 
 	// Purchase Routes Start
@@ -56,6 +60,10 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('purchases/history','Purchase\PurchaseController@history');		
 	Route::get('purchases/history/search','Purchase\PurchaseController@historySearch');		
 	Route::get('purchases/bill/{bill}','Purchase\PurchaseController@searchBillByID');		
+	Route::get('purchase/edit','Purchase\PurchaseController@showEdit');	
+	Route::post('purchase/edit','Purchase\PurchaseController@editBill');			
+	Route::post('purchase/delete','Purchase\PurchaseController@deleteBill');			
+			
 	// Purchase Routes End
 
 
