@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Partner\Partner as Partner;
 use App\Models\Trail\Trail;
+use Auth;
 
 class PartnerController extends Controller
 {
+	
+	
     public function show()
     {
 		//Trail::makeTrail('Partners Page','','','2');

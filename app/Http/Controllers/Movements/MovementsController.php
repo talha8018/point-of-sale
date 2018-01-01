@@ -7,10 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Movement\Movement;
 use App\Models\Partner\Partner;
 use App\Models\Trail\Trail;
-
+use Auth;
 
 class MovementsController extends Controller
 {
+   
+    
     public function show()
     {
         $partners = Partner::where('status','1')->orderBy('type','desc')->get()->toArray(); 

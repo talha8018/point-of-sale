@@ -12,6 +12,7 @@ use App\Models\Trail\Trail;
 
 class StockController extends Controller
 {
+	
     public function show()
     {
 		//Trail::makeTrail('Stock Page','','','2');

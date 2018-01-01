@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Company\Company as Company;
 use App\Models\Trail\Trail;
+use Auth;
 
 class CompanyController extends Controller
 {
+
+	
     public function show()
     {
 		//Trail::makeTrail('Company Page','','','2');

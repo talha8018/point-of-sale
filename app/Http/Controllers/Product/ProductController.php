@@ -7,9 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Product\Product;
 use App\Models\Company\Company;
 use App\Models\Trail\Trail;
+use Auth;
 
 class ProductController extends Controller
 {
+	
+	
     public function show()
     {
 		//Trail::makeTrail('Product Page','','','2');

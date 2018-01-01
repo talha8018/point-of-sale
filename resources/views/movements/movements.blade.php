@@ -1,3 +1,18 @@
+<?php
+
+        	$role = Auth::user()->role_id;
+		$status = Auth::user()->status;
+        if($role == '1' || $role == '2' )
+        {
+            
+        }
+        else
+        {
+die;
+        }
+    
+
+?>
 @extends('layouts.master')
 
 @section('title')

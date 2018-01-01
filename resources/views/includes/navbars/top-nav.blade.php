@@ -1,3 +1,11 @@
+  <?php
+  $role = Auth::user()->role_id;
+        
+    
+  
+  ?>
+  
+  
   <!-- ============================================================== -->
         <!-- Topbar header - style you can find in pages.scss -->
         <!-- ============================================================== -->
@@ -60,8 +68,11 @@
                                             {{ csrf_field() }}
                                         </form>
 
-
+<?php if($role == '1' || $role == '2' ): ?>
                     <li> <a href="{{url('partners')}}" class="waves-effect"> Partner Section </a></li>
+                    
+<?php endif; ?>   
+<?php if($role == '1'): ?>              
                     <li> <a href="javascript:void(0)" class="waves-effect"> C&P Section </a>
                         <ul class="nav nav-second-level">
                             <li> <a href="{{url('companies')}}"><i class=" fa-fw">C</i><span class="hide-menu">Companies</span></a> </li>
@@ -69,9 +80,9 @@
                         </ul>
                     </li>  
 
-                    
+  <?php endif; ?>                     
                    
-
+<?php if($role == '1' || $role == '2' ): ?> 
                     <li> <a href="javascript:void(0)" class="waves-effect"> Purchases Section </a>
                         <ul class="nav nav-second-level">
                             <li> <a href="{{url('purchases')}}"><i class=" fa-fw">P</i><span class="hide-menu">Purchases</span></a> </li>
@@ -80,6 +91,10 @@
                             
                         </ul>
                     </li> 
+   <?php endif; ?>   
+<?php if($role == '1' || $role == '2' || $role == '3'): ?>                
+                   
+                   
                     <li> <a href="javascript:void(0)" class="waves-effect"> Sale Section </a>
                         <ul class="nav nav-second-level">
                             <li> <a href="{{url('sale')}}"><i class=" fa-fw">S</i><span class="hide-menu">Sale</span></a> </li>
@@ -87,9 +102,16 @@
                             <li> <a href="{{url('sale/edit')}}"><i class=" fa-fw">E</i><span class="hide-menu">Edit & Delete</span></a> </li>
                         </ul>
                     </li>    
+   <?php endif; ?>   
+<?php if($role == '1' || $role == '2'): ?>                
+                   
                     <li> <a href="{{url('stock')}}" class="waves-effect"> Stock Section </a></li>
+   <?php endif; ?>   
+<?php if($role == '1' || $role == '2' ): ?>                
+                   
                     <li> <a href="{{url('movements')}}" class="waves-effect"> Movement Section </a></li>
                     
+<?php endif; ?>   
 
                 </ul>
             </div>

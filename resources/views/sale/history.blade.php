@@ -1,3 +1,19 @@
+<?php
+
+       $role = Auth::user()->role_id;
+        $status = Auth::user()->status;
+
+        if($role == '1' || $role == '2' || $role == '3')
+        {
+            
+        }
+        else
+        {
+            die('Access Denied');
+        }
+    
+
+?>
 @extends('layouts.master')
 
 @section('title')

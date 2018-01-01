@@ -17,14 +17,19 @@ use App\Models\Increment\Increment;
 use DB;
 use App\User;
 
+
 class SaleController extends Controller
 {
+    
+
     public function show()
     {
         $customers = Partner::where('status','1')->where('type','customer')->get()->toArray();
         $temp   = Temp::select(DB::raw('sum(quantity) as quantity'),'product_id','bill_id','unit_sale_price','partner_id','partner_name','d_unit_sale_price','discount','d_unit_profit')->groupBy('product_id','bill_id','unit_sale_price','partner_id','partner_name','d_unit_sale_price','discount','d_unit_profit')->get()->toArray();
         $incr   = Increment::where('type','customer')->first();
-    	return view('sale/sale',compact('customers','temp','incr'));
+       	$products = Product::where('status','=','1')->orderBy('id','desc')->get(['id','name'])->toArray();
+
+    	return view('sale/sale',compact('customers','temp','incr','products'));
     }
 
     public function showEdit()
@@ -371,6 +376,7 @@ class SaleController extends Controller
     public function getBill($bill)
     {
 
+        
         $sales = Sale::where('bill_id',$bill)->get()->toArray(); 
         if(!$sales)
         {

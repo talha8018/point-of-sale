@@ -1,3 +1,19 @@
+<?php
+
+        $role = Auth::user()->role_id;
+        $status = Auth::user()->status;
+
+        if($role == '1' || $role == '2' || $role == '3')
+        {
+            
+        }
+        else
+        {
+            die('Access Denied');
+        }
+    
+
+?>
 @extends('layouts.master')
 
 @section('title')
@@ -46,7 +62,33 @@ Purchase
                     <input type="submit"  class="btn btn-outline btn-default" value="Insert to Invoice">
                     
                 </form>
-                
+                <hr>
+
+                <form action="/sale/temp" method="post">
+                    {{csrf_field()}}
+                    
+                  <input type="hidden" name="bill_id" value="{{$incr['count']}}">
+                    
+                    <div class="col-md-8 p-l-0">
+                        <label for="">Product Name</label>
+                        
+                        <select name="product_id" required="required"  class="form-control" id="productss">
+                        <option value="">Select</option>
+                        <?php foreach($products as $p): ?>
+                            <option value="{{$p['id']}}">{{$p['name']}}</option>
+    <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                   <div class="col-md-4 p-l-0">
+                        <label for="">Quantity</label>
+                        <input type="number"  class="form-control" value=""  name="quantity" placeholder="Quantity">
+                    </div>
+                   <div class="col-md-12 p-l-0">
+                    <input type="submit"  class="btn btn-outline btn-default" value="Insert to Invoice">
+                    </div>
+                </form>
+
             </div>
             
         </div>
@@ -163,6 +205,8 @@ Purchase
 @endsection
 
 @section('css')
+<link href="plugins/bower_components/custom-select/custom-select.css" rel="stylesheet" type="text/css" />
+
 <style>
 .rs
 {
@@ -173,6 +217,8 @@ Purchase
 @endsection
 
 @section('js')
+ <script src="plugins/bower_components/custom-select/custom-select.min.js" type="text/javascript"></script>
+
 <script>
     $("#credit").keyup(function(){
         var total = $("#total").val();
@@ -186,5 +232,7 @@ Purchase
         var w = window.open("sale/get-bill/"+bill, "popupWindow", "width=600, height=800, scrollbars=yes");    
     });
 
+
+    $("#productss").select2();
 </script>
 @endsection

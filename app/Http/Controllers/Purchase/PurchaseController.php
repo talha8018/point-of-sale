@@ -17,6 +17,8 @@ use App\Models\Increment\Increment;
 
 class PurchaseController extends Controller
 {
+   
+    
     public function show()
     {
         $dealers = Partner::where('status','1')->where('type','dealer')->get()->toArray();

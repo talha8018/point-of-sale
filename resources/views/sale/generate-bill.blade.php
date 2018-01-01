@@ -1,3 +1,18 @@
+<?php
+
+       $role = Auth::user()->role_id;
+        $status = Auth::user()->status;
+
+        if($role == '1' || $role == '2' || $role == '3')
+        {
+            
+        }
+        else
+        {
+            die('Access Denied');
+        }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +58,10 @@
 </head>
 <body>
     <div class="container-fluid">
-        <p class="trader">Zain Trader's</p>
+
+    <div class="col-xs-6">
+
+        <p class="trader">Estimated</p>
         <div class="row">
             <div class="col-xs-7">
                 <p class="m-0">Invoice #: <b>{{$bill}}</b></p>
@@ -116,7 +134,7 @@
 
 
       
-
+</div>
 
     </div>    
     <script src="{{ asset('plugins/bower_components/jquery/dist/jquery.min.js') }}"></script>
