@@ -71,7 +71,7 @@ Purchase
                 <tbody>
                     <?php foreach($bill as $b): $detail = App\Models\Sale\SaleBill::where('bill_id',$b['bill_id'])->first(); ?>
                         <tr>
-                            <td> <a href="#" class="bill-view" data-bill="{{$b['bill_id']}}"   data-toggle="modal" data-target=".view-bill">{{$b['bill_id']}} </a></td>
+                            <td> <a href="#" onclick="printView({{$b['bill_id']}})">Print</a> | <a href="#" class="bill-view" data-bill="{{$b['bill_id']}}"   data-toggle="modal" data-target=".view-bill">{{$b['bill_id']}} </a></td>
                             <td> <?php 
                                    echo $b['partner_name']==null?'Customer':$b['partner_name'];
                                 ?> </td>
@@ -136,5 +136,11 @@ Purchase
                 }
             })
         });
+
+
+        function printView(id)
+        {
+            var w = window.open("/sale/get-bill/"+id, "popupWindow", "width=900, height=500, scrollbars=yes");    
+        }
     </script>
 @endsection

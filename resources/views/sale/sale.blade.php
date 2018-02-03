@@ -229,7 +229,7 @@ Purchase
 
     $("#make_sale").submit(function() {
         var bill = $("#sbill_id").val();
-        var w = window.open("sale/get-bill/"+bill, "popupWindow", "width=600, height=800, scrollbars=yes");    
+        var w = window.open("sale/get-bill/"+bill, "popupWindow", "width=900, height=500, scrollbars=yes");    
     });
 
 
