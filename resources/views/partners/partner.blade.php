@@ -53,7 +53,7 @@ Partners
                 			<td>{{ucfirst($val['type'])}}</td>
                 			<td>{{$val['phone']}}</td>
                 			<td>{{number_format($val['balance'],2)}}</td>
-                			<td> <a href="<?php echo url('partner/update-partner').'/'.$val['id']; ?>" class="update-model-link" data-id="{{$val['id']}}" data-phone="{{$val['phone']}}" data-type="{{$val['type']}}" data-name="{{$val['name']}}" > <i class="mdi mdi-account-edit"></i> </a> | <a href="partner/delete/{{$val['id']}}"> <i class="mdi mdi-delete-forever"></i></a> </td>
+                			<td> <a href="<?php echo url('partner/update-partner').'/'.$val['id']; ?>" class="update-model-link" data-id="{{$val['id']}}" data-phone="{{$val['phone']}}" data-type="{{$val['type']}}" data-name="{{$val['name']}}" > <i class="mdi mdi-account-edit"></i> </a>  <a href="partner/delete/{{$val['id']}}" class="hide"> <i class="mdi mdi-delete-forever"></i></a> </td>
                 		</tr>
                 		@endforeach
                 	</tbody>

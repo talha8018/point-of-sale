@@ -46,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('partners','Partner\PartnerController@show');	
 	Route::post('partner/add','Partner\PartnerController@insert');	
 	Route::post('partner/update','Partner\PartnerController@update');	
-	Route::get('partner/delete/{id}','Partner\PartnerController@delete');	
+	//Route::get('partner/delete/{id}','Partner\PartnerController@delete');	
 	Route::get('partner/add-partner','Partner\PartnerController@addPartner');	
 	Route::get('partner/update-partner/{id}','Partner\PartnerController@updatePartner');	
 	// Parnter Routes End
