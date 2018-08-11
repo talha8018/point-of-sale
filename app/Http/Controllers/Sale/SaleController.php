@@ -81,6 +81,12 @@ class SaleController extends Controller
                 {
                     break;
                 }
+                $unit_sale_price = $s['unit_sale_price'];
+                if(!empty($input['sale_price']) && $input['sale_price'] > 0)
+                {
+                    $unit_sale_price = $input['sale_price'];
+                }
+
                 if($quantity<=$s['quantity'])
                 {
                     Temp::create([
@@ -89,14 +95,13 @@ class SaleController extends Controller
                         'product_id'    => $code,
                         'barcode'       => $barcode,
                         'quantity'      => $quantity,
-                        'unit_sale_price'   => $s['unit_sale_price'],
-                        'total_sale_price'  => $quantity * $s['unit_sale_price'],
+                        'unit_sale_price'   => $unit_sale_price,
+                        'total_sale_price'  => $quantity * $unit_sale_price,
                         'unit_profit'   => $unit_profit,
                         'total_profit'  => $unit_profit * $quantity,
                         'discount'      => 0,
-
-                        'd_unit_sale_price'=> $s['unit_sale_price'],
-                        'd_total_sale_price'=> $quantity * $s['unit_sale_price'],
+                        'd_unit_sale_price'=> $unit_sale_price,
+                        'd_total_sale_price'=> $quantity * $unit_sale_price,
                         'd_unit_profit'     => $unit_profit,
                         'd_total_profit'    => $unit_profit * $quantity,
 
@@ -113,14 +118,14 @@ class SaleController extends Controller
                         'product_id'    => $code,
                         'barcode'       => $barcode,
                         'quantity'      => $s['quantity'],
-                        'unit_sale_price'   => $s['unit_sale_price'],
-                        'total_sale_price'  => $s['quantity'] * $s['unit_sale_price'],
+                        'unit_sale_price'   => $unit_sale_price,
+                        'total_sale_price'  => $s['quantity'] * $unit_sale_price,
                         'unit_profit'   => $unit_profit,
                         'total_profit'  => $unit_profit * $s['quantity'],
                         'discount'      => 0,
 
-                        'd_unit_sale_price'=> $s['unit_sale_price'],
-                        'd_total_sale_price'=> $quantity * $s['unit_sale_price'],
+                        'd_unit_sale_price'=> $unit_sale_price,
+                        'd_total_sale_price'=> $quantity * $unit_sale_price,
                         'd_unit_profit'     => $unit_profit,
                         'd_total_profit'    => $unit_profit * $quantity,
                         'added_by'      => Auth::user()->id
@@ -351,8 +356,7 @@ class SaleController extends Controller
         $input = request();
         $sales = Sale::where('bill_id',$input['bill_id'])->get()->toArray();
         if(Movement::where('bill_id',$input['bill_id'])->where('type','customer')->exists()===true)
-        {
-            
+        {   
             $partner_id = Movement::where('bill_id',$input['bill_id'])->where('type','customer')->first()->partner_id;
             $remaining = Bill::where('bill_id',$input['bill_id'])->first()->remaining;
             $balance = Partner::where('id',$partner_id)->first()->balance;
@@ -378,9 +382,13 @@ class SaleController extends Controller
 
         
         $sales = Sale::where('bill_id',$bill)->get()->toArray(); 
+        //$sales   = Sale::where('bill_id',$bill)->select(DB::raw('sum(quantity) as quantity'),'product_id','bill_id','unit_sale_price','partner_id','partner_name','d_unit_sale_price','discount','d_unit_profit','added_by')->groupBy('product_id','bill_id','unit_sale_price','partner_id','partner_name','d_unit_sale_price','discount','d_unit_profit','added_by')->get()->toArray();
+
         if(!$sales)
         {
-            $sales = Temp::where('bill_id',$bill)->get()->toArray();   
+            $sales = Temp::where('bill_id',$bill)->get()->toArray(); 
+            //$sales   = Temp::where('bill_id',$bill)->select(DB::raw('sum(quantity) as quantity'),'product_id','bill_id','unit_sale_price','partner_id','partner_name','d_unit_sale_price','discount','d_unit_profit','added_by')->groupBy('product_id','bill_id','unit_sale_price','partner_id','partner_name','d_unit_sale_price','discount','d_unit_profit','added_by')->get()->toArray();
+
         }
 
         if(empty($sales[0]['partner_id']))

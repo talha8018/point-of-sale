@@ -61,31 +61,34 @@
                                             {{ csrf_field() }}
                                         </form>
 
-<?php if($role == '1' || $role == '2' ): ?>
+                    @can('partner-list')
                     <li> <a href="{{url('partners')}}" class="waves-effect"> Partner Section </a></li>
-                    
-<?php endif; ?>   
-<?php if($role == '1'): ?>              
+                    @endcan
+
+                    @can('cp-list')
                     <li> <a href="javascript:void(0)" class="waves-effect"> C&P Section </a>
                         <ul class="nav nav-second-level">
                             <li> <a href="{{url('companies')}}"><i class=" fa-fw">C</i><span class="hide-menu">Companies</span></a> </li>
                             <li> <a href="{{url('products')}}"><i class=" fa-fw">P</i><span class="hide-menu">Products</span></a> </li>
                         </ul>
                     </li>  
+                    @endcan
 
-  <?php endif; ?>                     
-                   
-<?php if($role == '1' || $role == '2' ): ?> 
+                    @can('purchase') 
                     <li> <a href="javascript:void(0)" class="waves-effect"> Purchases Section </a>
                         <ul class="nav nav-second-level">
                             <li> <a href="{{url('purchases')}}"><i class=" fa-fw">P</i><span class="hide-menu">Purchases</span></a> </li>
+                            @can('purchase-history')
                             <li> <a href="{{url('purchases/history')}}"><i class=" fa-fw">H</i><span class="hide-menu">History</span></a> </li>
+                            @endcan
+                            @can('purchase-edit')
                             <li> <a href="{{url('purchase/edit')}}"><i class=" fa-fw">E</i><span class="hide-menu">Edit & Delete</span></a> </li>
-                            
+                            @endcan                            
                         </ul>
                     </li> 
-   <?php endif; ?>   
-<?php if($role == '1' || $role == '2' || $role == '3'): ?>                
+                    @endcan
+
+               
                    
                    
                     <li> <a href="javascript:void(0)" class="waves-effect"> Sale Section </a>
@@ -95,16 +98,14 @@
                             <li> <a href="{{url('sale/edit')}}"><i class=" fa-fw">E</i><span class="hide-menu">Edit & Delete</span></a> </li>
                         </ul>
                     </li>    
-   <?php endif; ?>   
-<?php if($role == '1' || $role == '2'): ?>                
+                  
                    
                     <li> <a href="{{url('stock')}}" class="waves-effect"> Stock Section </a></li>
-   <?php endif; ?>   
-<?php if($role == '1' || $role == '2' ): ?>                
+            
                    
                     <li> <a href="{{url('movements')}}" class="waves-effect"> Movement Section </a></li>
                     
-<?php endif; ?>   
+   
 
                 </ul>
             </div>

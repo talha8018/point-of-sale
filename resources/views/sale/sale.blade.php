@@ -2,7 +2,7 @@
 @extends('layouts.master')
 
 @section('title')
-Purchase
+Sale
 @endsection
 
 @section('content')
@@ -54,7 +54,7 @@ Purchase
                     
                   <input type="hidden" name="bill_id" value="{{$incr['count']}}">
                     
-                    <div class="col-md-8 p-l-0">
+                    <div class="col-md-4 p-l-0">
                         <label for="">Product Name</label>
                         
                         <select name="product_id" required="required"  class="form-control" id="productss">
@@ -68,6 +68,10 @@ Purchase
                    <div class="col-md-4 p-l-0">
                         <label for="">Quantity</label>
                         <input type="number"  class="form-control" value=""  name="quantity" placeholder="Quantity">
+                    </div>
+                    <div class="col-md-4 p-l-0">
+                        <label for="">Sale Price</label>
+                        <input type="number"  class="form-control" value=""  name="sale_price" placeholder="Sale Price">
                     </div>
                    <div class="col-md-12 p-l-0">
                     <input type="submit"  class="btn btn-outline btn-default" value="Insert to Invoice">

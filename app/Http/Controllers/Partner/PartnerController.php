@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Partner\Partner as Partner;
 use App\Models\Trail\Trail;
+use Spatie\Permission\Models\Permission;
+
 use Auth;
 
 class PartnerController extends Controller
